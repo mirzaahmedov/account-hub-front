@@ -3,13 +3,10 @@ import { AuthContext } from "./AuthContext";
 import type { User } from "@/models/user";
 import { useMutation } from "@tanstack/react-query";
 import { getMe } from "./api";
-import { useLocation } from "react-router-dom";
 
 export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
-
-  const { pathname } = useLocation();
 
   const handleSetUser = (user: User | null) => {
     if (user) {
@@ -32,10 +29,11 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   });
 
   useEffect(() => {
+    const pathname = window.location.pathname;
     if (pathname !== "/login" && pathname !== "/register") {
       getMeMutation.mutate();
     }
-  }, [getMeMutation.mutate, pathname]);
+  }, [getMeMutation.mutate]);
 
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, setUser: handleSetUser, isLoading: getMeMutation.isPending }}>
