@@ -1,9 +1,10 @@
+import { useAuth } from "@/features/auth/useAuth";
 import { Navigate, Outlet } from "react-router-dom";
 import { AppHeader } from "./AppHeader";
-import { useAuth } from "@/features/auth/useAuth";
 
-export const AppLayout = () => {
+export const AuthLayout = () => {
   const { isLoading, isAuthenticated } = useAuth();
+
   return isLoading ? (
     <div className="h-full grid place-items-center">
       <span className="loading loading-spinner"></span>

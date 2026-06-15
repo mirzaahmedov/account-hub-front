@@ -1,27 +1,12 @@
 import { TrayIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { sendVerificationEmail } from "./api";
-import { useLocation, useNavigate, type Location } from "react-router-dom";
-import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 const VerifyEmail = () => {
-  const { state } = useLocation() as Location<{ from: "register" } | undefined>;
-
-  const navigate = useNavigate();
   const sendVerificationEmailMutation = useMutation({
     mutationFn: sendVerificationEmail,
   });
-
-  useEffect(() => {
-    if (state?.from === "register") {
-      navigate("", { replace: true, state: null });
-      return;
-    } else {
-      sendVerificationEmailMutation.mutate();
-    }
-  }, [state, sendVerificationEmailMutation.mutate]);
-
-  console.log({ state });
 
   return (
     <div className="h-full grid place-items-center">
@@ -36,7 +21,14 @@ const VerifyEmail = () => {
         <button
           className="btn btn-primary"
           onClick={() => {
-            sendVerificationEmailMutation.mutate();
+            sendVerificationEmailMutation.mutate(undefined, {
+              onSuccess: () => {
+                toast.success("Verification email sent successfully");
+              },
+              onError: (error) => {
+                toast.error(error.message);
+              },
+            });
           }}
         >
           {sendVerificationEmailMutation.isPending ? <span className="loading loading-spinner"></span> : null} Resend Verification Email

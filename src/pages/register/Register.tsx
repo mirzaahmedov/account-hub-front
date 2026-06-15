@@ -1,19 +1,18 @@
 import { InputField } from "@/components/InputField";
+import { useAuth } from "@/features/auth/useAuth";
+import { emitter } from "@/lib/emitter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { registerUser } from "./api";
 import { UserCreateSchema, type UserCreateForm } from "./data";
-import { useAuth } from "@/features/auth/useAuth";
 
 const Register = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
-  const navigate = useNavigate();
 
   const { setUser } = useAuth();
 
@@ -38,7 +37,7 @@ const Register = () => {
 
         toast.success("Registration was successful! Please verify your email.");
 
-        navigate("/verify-email", { state: { from: "register" } });
+        emitter.emit("auth:verify-email");
       },
       onError(error) {
         toast.error(error.message);

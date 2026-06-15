@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "./api";
 import { UserLoginSchema, type UserLoginForm } from "./data";
 import { useAuth } from "@/features/auth/useAuth";
+import { emitter } from "@/lib/emitter";
 
 const Login = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -40,7 +41,7 @@ const Login = () => {
         if (user.status === "active") {
           navigate("/users");
         } else if (user.status === "unverified") {
-          navigate("/verify-email");
+          emitter.emit("auth:verify-email");
         }
       },
       onError(error) {

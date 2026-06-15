@@ -1,4 +1,5 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
+import { emitter } from "./emitter";
 
 const baseURL = import.meta.env.PROD ? "/api/v1" : "http://localhost:3001/api/v1";
 
@@ -17,7 +18,9 @@ privateApi.interceptors.response.use((res) => res, errorHandler);
 
 function requestHandler(config: InternalAxiosRequestConfig<unknown>) {
   const token = localStorage.getItem("access_token");
-  config.headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 }
 
@@ -28,7 +31,7 @@ function errorHandler(error: any) {
     const reason = error?.response?.data?.reason;
 
     if (statusCode === 403 && reason === "Unverified") {
-      window.location.href = "/verify-email";
+      emitter.emit("auth:verify-email");
       return;
     }
 
