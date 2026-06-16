@@ -30,8 +30,8 @@ function errorHandler(error: any) {
     const message = error?.response?.data?.message ?? "An error occurred";
     const reason = error?.response?.data?.reason;
 
-    if (statusCode === 403 && reason === "Unverified") {
-      emitter.emit("auth:verify-email");
+    if (statusCode === 403 && reason === "Blocked") {
+      emitter.emit("auth:logout");
       return;
     }
 

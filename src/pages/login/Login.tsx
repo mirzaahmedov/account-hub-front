@@ -1,4 +1,5 @@
 import { InputField } from "@/components/InputField";
+import { useAuth } from "@/features/auth/useAuth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
@@ -8,8 +9,6 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "./api";
 import { UserLoginSchema, type UserLoginForm } from "./data";
-import { useAuth } from "@/features/auth/useAuth";
-import { emitter } from "@/lib/emitter";
 
 const Login = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -37,12 +36,7 @@ const Login = () => {
         toast.success("Login successful");
 
         setUser(user || null);
-
-        if (user.status === "active") {
-          navigate("/users");
-        } else if (user.status === "unverified") {
-          emitter.emit("auth:verify-email");
-        }
+        navigate("/users");
       },
       onError(error) {
         toast.error(error.message);

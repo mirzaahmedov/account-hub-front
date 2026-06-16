@@ -25,16 +25,16 @@ const router = createBrowserRouter([
         element: <AuthLayout />,
         children: [
           {
+            index: true,
+            element: <Navigate to="/users" />,
+          },
+          {
             path: "verify-email",
             element: <VerifyEmail />,
           },
           {
             path: "email-verified",
             element: <EmailVerified />,
-          },
-          {
-            index: true,
-            element: <Navigate to="/users" />,
           },
           {
             path: "users",
